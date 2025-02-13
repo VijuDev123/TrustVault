@@ -9,14 +9,18 @@ import { Form, } from "@/components/ui/form"
 import CustomInput from './CustomInput';
 import { authFormSchema } from '@/lib/utils';
 import { IoLogoCodepen } from 'react-icons/io';
+import { Loader2 } from 'lucide-react';
 
 
 const AuthForm = ({ type }: { type: string }) => {
     const [user, setUser] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
+    const formSchema = authFormSchema(type);
+
     // const formSchema = authFormSchema(type);
     // 1. Define your form.
-    const form = useForm<z.infer<typeof authFormSchema>>({
-        resolver: zodResolver(authFormSchema),
+    const form = useForm<z.infer<typeof formSchema>>({
+        resolver: zodResolver(formSchema),
         defaultValues: {
             email: "",
             password: ''
@@ -24,10 +28,13 @@ const AuthForm = ({ type }: { type: string }) => {
     })
 
     // 2. Define a submit handler.
-    function onSubmit(values: z.infer<typeof authFormSchema>) {
+    function onSubmit(values: z.infer<typeof formSchema>) {
         // Do something with the form values.
         // ✅ This will be type-safe and validated.
+        setIsLoading(true)
         console.log(values)
+        setIsLoading(false)
+
     }
 
     return (
@@ -64,7 +71,7 @@ const AuthForm = ({ type }: { type: string }) => {
                         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
                             {type === 'sign-up' && (
                                 <>
-                                    {/* <div className="flex gap-4">
+                                    <div className="flex gap-4">
                                         <CustomInput control={form.control} name='firstName' label="First Name" placeholder='Enter your first name' />
                                         <CustomInput control={form.control} name='lastName' label="Last Name" placeholder='Enter your first name' />
                                     </div>
@@ -77,13 +84,12 @@ const AuthForm = ({ type }: { type: string }) => {
                                     <div className="flex gap-4">
                                         <CustomInput control={form.control} name='dateOfBirth' label="Date of Birth" placeholder='YYYY-MM-DD' />
                                         <CustomInput control={form.control} name='ssn' label="SSN" placeholder='Example: 1234' />
-                                    </div> */}
+                                    </div>
                                 </>
                             )}
                             <CustomInput control={form.control} name='email' label="Email" placeholder='Enter your email' />
                             <CustomInput control={form.control} name='password' label="Password" placeholder='Enter your password' />
-                            <Button type='submit'>Submit</Button>
-                            {/* <div className="flex flex-col gap-4">
+                            <div className="flex flex-col gap-4">
                                 <Button type="submit" disabled={isLoading} className="form-btn">
                                     {isLoading ? (
                                         <>
@@ -93,7 +99,7 @@ const AuthForm = ({ type }: { type: string }) => {
                                     ) : type === 'sign-in'
                                         ? 'Sign In' : 'Sign Up'}
                                 </Button>
-                            </div> */}
+                            </div>
                         </form>
                     </Form>
                     <footer className="flex justify-center gap-1">
