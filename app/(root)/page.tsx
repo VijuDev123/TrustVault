@@ -18,6 +18,7 @@ const Home = async ({ searchParams: { id, page } }: SearchParamProps) => {
 
     return (
         <section className="home">
+            <div>Checkcing</div>
             <div className="home-content">
                 <header className="home-header">
                     <HeaderBox
